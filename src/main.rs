@@ -18,7 +18,7 @@ re : clean run
 
 .PHONY : run clean re";
 const CPP_GI: &str = "*.out";
-const CPP: &str = "";
+const CPP: &str = "int main(){}";
 
 const LUA_MF: &str = "";
 const LUA: &str = "";
