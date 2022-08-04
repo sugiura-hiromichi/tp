@@ -1,5 +1,7 @@
+use clap::Parser;
 //MF->MakeFile, GI->.gitignore 'LauguageName'->Default Code
 const CPP_MF: &str = "clngp_opt= -std=c++2a -Wall --pedantic-error
+
 
 run : a.out
 \t./a.out
@@ -17,10 +19,26 @@ clean :
 re : clean run
 
 .PHONY : run clean re";
-const CPP_GI: &str = "*.out";
-const CPP: &str = "int main(){}";
+const CPP_GI: &str = "*.out
+*.pch";
+const CPP: &str = "int main(){
+
+}";
 
 const LUA_MF: &str = "";
 const LUA: &str = "";
 
-fn main() { println!("{CPP_MF}") }
+#[derive(Parser,)]
+#[clap(about)]
+struct TmpPrj {
+   ft:   String,
+   name: String,
+}
+
+fn main() {
+   let tmplt = TmpPrj::parse();
+   if tmplt.ft == "cpp".to_string() {
+      let main_cpp = std::fs::create_dir(format!("./{}", &tmplt.name),);
+   } else if tmplt.ft == "lua".to_string() {
+   }
+}
