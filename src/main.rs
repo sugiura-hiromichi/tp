@@ -1,15 +1,15 @@
 use {
-   clap::Parser,
-   std::{
-      fs,
-      io::{self, Write},
-   },
+    clap::Parser,
+    std::{
+        fs,
+        io::{self, Write},
+    },
 };
 
 //MF->MakeFile, GI->.gitignore 'LauguageName'->Default Code
 const CPP_MF: FileBuf = FileBuf {
-   name:    "MakeFile",
-   context: b"clngp_opt= -std=c++2a -Wall --pedantic-error
+    name: "MakeFile",
+    context: b"clngp_opt= -std=c++2a -Wall --pedantic-error
 
 run : a.out
 \t./a.out
@@ -30,8 +30,8 @@ re : clean run
 };
 
 const CPP_H: FileBuf = FileBuf {
-   name:    "all.h",
-   context: b"#include <cstddef>
+    name: "all.h",
+    context: b"#include <cstddef>
 #include <limits>
 #include <climits>
 #include <cfloat>
@@ -99,54 +99,58 @@ using namespace std::literals ;",
 };
 
 const CPP_GI: FileBuf = FileBuf {
-   name:    ".gitignore",
-   context: b"*.out
+    name: ".gitignore",
+    context: b"*.out
 *.pch",
 };
 
 const CPP: FileBuf = FileBuf {
-   name:    "main.cpp",
-   context: b"int main(){
-
-}",
+    name: "main.cpp",
+    context: b"#include \"all.h\"
+using namespace std;
+int main(){}",
 };
 
-const LUA_MF: FileBuf = FileBuf { name: "MakeFile", context: b"", };
+const LUA_MF: FileBuf = FileBuf {
+    name: "MakeFile",
+    context: b"run : main.lua
+\tlua main.lua",
+};
 
-const LUA: FileBuf = FileBuf { name: "main.lua", context: b"", };
+const LUA: FileBuf = FileBuf {
+    name: "main.lua",
+    context: b"",
+};
 
-#[derive(Parser,)]
+#[derive(Parser)]
 #[clap(about)]
 struct TmpPrj {
-   ft:   String,
-   name: String,
+    ft: String,
+    name: String,
 }
 
-struct FileBuf<'a,> {
-   name:    &'a str,
-   context: &'a [u8],
+struct FileBuf<'a> {
+    name: &'a str,
+    context: &'a [u8],
 }
 
-fn main() -> io::Result<(),> {
-   let tmplt = TmpPrj::parse();
-   let prj_name = format!("./{}", &tmplt.name);
-   let ft = tmplt.ft;
-   std::fs::create_dir(prj_name.clone(),)?;
+fn main() -> io::Result<()> {
+    let tmplt = TmpPrj::parse();
+    let prj_name = format!("./{}", &tmplt.name);
+    let ft = tmplt.ft;
+    std::fs::create_dir(prj_name.clone())?;
 
-   let fstream = if ft == "cpp".to_string() {
-      Ok(vec![CPP, CPP_GI, CPP_H, CPP_MF],)
-   } else if ft == "lua".to_string() {
-      Ok(vec![LUA, LUA_MF],)
-   } else {
-      Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
-   }?;
-   let create_file = |fstream: Vec<FileBuf,>| -> io::Result<(),> {
-      for fb in fstream {
-         let mut f = fs::File::create(format!("{prj_name}/{}", fb.name),)?;
-         f.write(fb.context,)?;
-      }
-      Ok((),)
-   };
+    let fstream = if ft == "cpp".to_string() {
+        Ok(vec![CPP, CPP_GI, CPP_H, CPP_MF])
+    } else if ft == "lua".to_string() {
+        Ok(vec![LUA, LUA_MF])
+    } else {
+        Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype"))
+    }?;
 
-   create_file(fstream,)
+    for fb in fstream {
+        let mut f = fs::File::create(format!("{prj_name}/{}", fb.name))?;
+        f.write(fb.context)?;
+    }
+    Ok(())
 }
