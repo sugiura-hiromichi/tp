@@ -8,9 +8,9 @@ use {
    },
 };
 
-//MF->MakeFile, GI->.gitignore 'LauguageName'->Default Code
+//MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
 const CPP_MF: FileBuf = FileBuf {
-   name:    "MakeFile",
+   name:    "Makefile",
    context: b"clngp_opt= -std=c++2a -Wall --pedantic-error
 
 run : a.out
@@ -113,7 +113,7 @@ int main(){}",
 };
 
 const LUA_MF: FileBuf = FileBuf {
-   name:    "MakeFile",
+   name:    "Makefile",
    context: b"run : main.lua
 \tlua main.lua",
 };
