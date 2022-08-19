@@ -1,3 +1,5 @@
+use std::os::unix::process::CommandExt;
+
 use {
    clap::Parser,
    std::{
@@ -148,5 +150,7 @@ fn main() -> io::Result<(),> {
       let mut f = fs::File::create(format!("{prj_name}/{}", fb.name),)?;
       f.write(fb.context,)?;
    }
+
+   std::process::Command::new("z",).arg(prj_name,).exec();
    Ok((),)
 }
