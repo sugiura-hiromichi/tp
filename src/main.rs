@@ -14,12 +14,9 @@ use {
 #[clap(about)]
 struct TmpPrj {
    ///filetype. Currently, cpp, lua and journal are available
-   ft:     String,
+   ft:   String,
    ///project name
-   name:   String,
-   ///NOTE This option is only valid for journal. Select w: Weekly, m: Monthly, y: Year
-   #[clap(value_parser)]
-   period: char,
+   name: String,
 }
 
 fn create_files(fstream: Vec<FileBuf,>, prj_name: String,) -> io::Result<(),> {
@@ -30,22 +27,9 @@ fn create_files(fstream: Vec<FileBuf,>, prj_name: String,) -> io::Result<(),> {
    Ok((),)
 }
 
-fn journal(prj_name: String, period: char,) -> io::Result<(),> {
-   let name = match period {
-      'w' => Ok(prj_name.as_str(),),
-      'm' => {
-         fs::create_dir(prj_name,)?;
-         Ok("MONTHLYLOG.md",)
-      },
-      'y' => {
-         fs::create_dir(prj_name,)?;
-         Ok("YEARLOG.md",)
-      },
-      _ => Err(io::Error::new(
-         io::ErrorKind::NotFound,
-         "unknown option for period. period must be 'w' or 'm' or 'y'",
-      ),),
-   }?;
+fn journal(prj_name: String,) -> io::Result<(),> {
+    //TODO 
+   let name = match prj_name {};
    let fstream = vec![FileBuf { name, context: JOURNAL, }];
    create_files(fstream, "./".to_string(),)
 }

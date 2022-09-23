@@ -1,6 +1,6 @@
 //! Contain const variables
 
-pub(crate) struct FileBuf<'a,> {
+pub struct FileBuf<'a,> {
    pub(crate) name:    &'a str,
    pub(crate) context: &'a [u8],
 }
