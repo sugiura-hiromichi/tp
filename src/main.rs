@@ -31,23 +31,33 @@ fn journal(prj_name: String,) -> io::Result<(),> {
    //TODO
    let name = match prj_name.parse::<u16>() {
       Ok(m_y,) => match m_y {
-         1 => "1_January",
-         2 => "2_February",
-         3 => "3_March",
-         4 => "4_April",
-         5 => "5_May",
-         6 => "6_June",
-         7 => "7_July",
-         8 => "8_August",
-         9 => "9_September",
-         10 => "10_October",
-         11 => "11_November",
-         12 => "12_December",
-         y @ 2022..=u16::MAX => y.into::<&str>(),
+         m @ 1..=12 => {
+            fs::create_dir(match m {
+               1 => "1_January",
+               2 => "2_February",
+               3 => "3_March",
+               4 => "4_April",
+               5 => "5_May",
+               6 => "6_June",
+               7 => "7_July",
+               8 => "8_August",
+               9 => "9_September",
+               10 => "10_October",
+               11 => "11_November",
+               12 => "12_December",
+               _ => panic!("error happen in journal()"),
+            },)?;
+            "MONTHLYLOG"
+         },
+         2022..=u16::MAX => {
+            fs::create_dir(&prj_name,)?;
+            "YEARLOG"
+         },
          _ => "journal_template",
       },
-      Err(e,) => panic!("{e}"),
+      Err(_,) => &prj_name,
    };
+   let name = &format!("{name}.md");
    let fstream = vec![FileBuf { name, context: JOURNAL, }];
    create_files(fstream, "./".to_string(),)
 }
@@ -57,7 +67,7 @@ fn main() -> io::Result<(),> {
    let prj_name = format!("./{}", &tmplt.name);
    let ft = tmplt.ft;
    if "journal".to_string() == ft {
-      return journal(prj_name.clone(), tmplt.period,);
+      return journal(prj_name.clone(),);
    }
    fs::create_dir(prj_name.clone(),)?;
 
