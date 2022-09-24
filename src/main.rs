@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 mod templates;
 
 use {
@@ -28,11 +30,11 @@ fn create_files(fstream: Vec<FileBuf,>, prj_name: String,) -> io::Result<(),> {
 }
 
 fn journal(prj_name: String,) -> io::Result<(),> {
-   //TODO
-   let name = match prj_name.parse::<u16>() {
+   //remove first "./" of prj_name
+   let name = match &prj_name[2..].parse::<i32>() {
       Ok(m_y,) => match m_y {
          m @ 1..=12 => {
-            fs::create_dir(match m {
+            let dir = match m {
                1 => "1_January",
                2 => "2_February",
                3 => "3_March",
@@ -46,16 +48,17 @@ fn journal(prj_name: String,) -> io::Result<(),> {
                11 => "11_November",
                12 => "12_December",
                _ => panic!("error happen in journal()"),
-            },)?;
-            "MONTHLYLOG"
+            };
+            fs::create_dir(dir,)?;
+            dir.to_owned() + "/MONTHLYLOG.md"
          },
-         2022..=u16::MAX => {
+         2022..=i32::MAX => {
             fs::create_dir(&prj_name,)?;
-            "YEARLOG"
+            prj_name.to_owned() + "/YEARLOG.md"
          },
-         _ => "journal_template",
+         _ => "journal_template".to_string(),
       },
-      Err(_,) => &prj_name,
+      Err(_,) => prj_name,
    };
    let name = &format!("{name}.md");
    let fstream = vec![FileBuf { name, context: JOURNAL, }];
@@ -82,4 +85,14 @@ fn main() -> io::Result<(),> {
 
    std::process::Command::new("z",).arg(prj_name,).exec();
    Ok((),)
+}
+
+#[cfg(test)]
+mod tests {
+   use super::*;
+
+   #[test]
+   fn parse_str_to_num() {
+      assert_eq!("1".to_string().parse::<i32>(), Ok(1));
+   }
 }
