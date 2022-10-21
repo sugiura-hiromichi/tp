@@ -125,7 +125,7 @@ clean :
 
 pub const C: FileBuf = FileBuf {
    name:    "main.c",
-   context: b"#include <all.h>
+   context: b"#include <stdio.h>
 int main(){
 
 }",
