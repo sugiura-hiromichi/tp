@@ -2,20 +2,17 @@
 
 mod templates;
 
-use {
-   clap::Parser,
-   std::{
-      fs,
-      io::{self, Write},
-      os::unix::process::CommandExt,
-   },
-   templates::*,
-};
+use clap::Parser;
+use std::fs;
+use std::io;
+use std::io::Write;
+use std::os::unix::process::CommandExt;
+use templates::*;
 
 #[derive(Parser,)]
 #[clap(about)]
 struct TmpPrj {
-   ///filetype. Currently, cpp, lua and journal are available
+   ///filetype. Currently, cpp, c, lua and journal are available
    ft:   String,
    ///project name
    name: String,
@@ -69,21 +66,23 @@ fn main() -> io::Result<(),> {
    let tmplt = TmpPrj::parse();
    let prj_name = format!("./{}", &tmplt.name);
    let ft = tmplt.ft;
-   if "journal".to_string() == ft {
+   if "journal" == &ft {
       return journal(prj_name.clone(),);
    }
    fs::create_dir(prj_name.clone(),)?;
 
-   let fstream = if ft == "cpp".to_string() {
+   let fstream = if &ft == "cpp" {
       Ok(vec![CPP, CPP_GI, CPP_H, CPP_MF],)
-   } else if ft == "lua".to_string() {
+   } else if &ft == "lua" {
       Ok(vec![LUA, LUA_MF],)
+   } else if &ft == "c" {
+      Ok(vec![C, CPP_GI, C_MF],)
    } else {
       Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
    }?;
    create_files(fstream, prj_name.clone(),)?;
 
-   std::process::Command::new("z",).arg(prj_name,).exec();
+   std::process::Command::new("a",).arg(prj_name,).exec();
    Ok((),)
 }
 

@@ -23,9 +23,7 @@ clean :
 \trm -f ./a.out
 \trm -f ./all.h.pch
 
-re : clean run
-
-.PHONY : run clean re",
+.PHONY : run clean",
 };
 
 pub const CPP_H: FileBuf = FileBuf {
@@ -106,7 +104,31 @@ pub const CPP: FileBuf = FileBuf {
    name:    "main.cpp",
    context: b"#include \"all.h\"
 using namespace std;
-int main(){}",
+int main(){
+
+}",
+};
+
+pub const C_MF: FileBuf = FileBuf {
+   name:    "Makefile",
+   context: b"run : a.out
+\t./a.out
+
+a.out : main.c
+\tclang $<
+
+clean :
+\trm -f ./a.out
+
+.PHONY : run clean",
+};
+
+pub const C: FileBuf = FileBuf {
+   name:    "main.c",
+   context: b"#include <all.h>
+int main(){
+
+}",
 };
 
 pub const LUA_MF: FileBuf = FileBuf {
