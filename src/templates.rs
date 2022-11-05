@@ -10,7 +10,7 @@ pub const CPP_MF: FileBuf = FileBuf {
    name:    "Makefile",
    context: b"clngp_opt= -std=c++2a -Wall --pedantic-error
 
-run : a.out
+r : a.out
 \t./a.out
 
 a.out : main.cpp all.h all.h.pch
@@ -23,7 +23,7 @@ clean :
 \trm -f ./a.out
 \trm -f ./all.h.pch
 
-.PHONY : run clean",
+.PHONY : r clean",
 };
 
 pub const CPP_H: FileBuf = FileBuf {
@@ -111,7 +111,7 @@ int main(){
 
 pub const C_MF: FileBuf = FileBuf {
    name:    "Makefile",
-   context: b"run : a.out
+   context: b"r : a.out
 \t./a.out
 
 a.out : main.c
@@ -120,7 +120,7 @@ a.out : main.c
 clean :
 \trm -f ./a.out
 
-.PHONY : run clean",
+.PHONY : r clean",
 };
 
 pub const C: FileBuf = FileBuf {
@@ -133,7 +133,7 @@ int main(){
 
 pub const LUA_MF: FileBuf = FileBuf {
    name:    "Makefile",
-   context: b"run : main.lua
+   context: b"r : main.lua
 \tlua main.lua",
 };
 
