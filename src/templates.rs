@@ -177,10 +177,6 @@ t : test.lua
 pub const LUA_T: FileBuf = FileBuf {
 	name:    "test.lua",
 	context: b"-- INFO: This file is `test.lua`
-print'\\n\\n--> test started <-----|'
-
-
-print'\\n\\n--> test ended <-------|'
 
 ",
 };
