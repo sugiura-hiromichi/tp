@@ -109,11 +109,17 @@ pub const CPP_GI: FileBuf = FileBuf {
 
 pub const CPP_T: FileBuf = FileBuf {
 	name:    "test.cpp",
-	context: b"#include \"all.h\"
+	context: b"#include <cassert>
+#include \"all.h\"
 using namespace std;
 /// INFO: This file is `test.cpp`
-int main(){
 
+void t1(){
+    assert(true);
+}
+
+int main(){
+    t1();
 }",
 };
 
@@ -122,7 +128,6 @@ pub const CPP: FileBuf = FileBuf {
 	context: b"#include \"all.h\"
 using namespace std;
 int main(){
-
 }",
 };
 
@@ -148,10 +153,16 @@ clean :
 
 pub const C_T: FileBuf = FileBuf {
 	name:    "test.c",
-	context: b"#include <stdio.h>
+	context: b"#include <assert.h>
+#include <stdio.h>
 /// INFO: This file is `test.c`
-int main(){
 
+void t1(){
+    assert(0);
+}
+
+int main(){
+    t1();
 }",
 };
 
@@ -159,7 +170,6 @@ pub const C: FileBuf = FileBuf {
 	name:    "main.c",
 	context: b"#include <stdio.h>
 int main(){
-
 }",
 };
 
