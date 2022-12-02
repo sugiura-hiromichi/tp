@@ -188,6 +188,7 @@ pub const LUA_T: FileBuf = FileBuf {
 	name:    "test.lua",
 	context: b"-- INFO: This file is `test.lua`
 
+print'<====: ALL TESTS HAVE PASSED :=====>'
 ",
 };
 
