@@ -8,7 +8,7 @@ pub struct FileBuf<'a,> {
 //MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
 pub const CPP_MF: FileBuf = FileBuf {
 	name:    "Makefile",
-	context: b"clngp_opt= -std=c++2a -Wall --pedantic-error
+	context: b"clngp_opt= -std=c++2a -Wall -mmacosx-version-min=13 --pedantic-error
 
 r : a.out
 \t./a.out
@@ -133,17 +133,19 @@ int main(){
 
 pub const C_MF: FileBuf = FileBuf {
 	name:    "Makefile",
-	context: b"r : a.out
+	context: b"clang_opt= -mmacosx-version-min=13
+
+r : a.out
 \t./a.out
 
 t : b.out
 \t./b.out
 
 a.out : main.c
-\tclang $< -o $@
+\tclang $(clang_opt) $< -o $@
 
 b.out : test.c
-\tclang $< -o $@
+\tclang $(clang_opt) $< -o $@
 
 clean :
 \trm -f ./a.out
