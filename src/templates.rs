@@ -5,6 +5,17 @@ pub struct FileBuf<'a,> {
 	pub(crate) context: &'a [u8],
 }
 
+// TODO: Add README.md template
+
+pub const README: FileBuf = FileBuf {
+	name:    "README.md",
+	context: b"# about me
+
+>note that this doc is generated automatically
+
+this project is",
+};
+
 //MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
 pub const CPP_MF: FileBuf = FileBuf {
 	name:    "Makefile",

@@ -3,19 +3,29 @@
 mod templates;
 
 use clap::Parser;
+use mylibrary::sh_cmd;
+use std::collections::HashSet;
 use std::fs;
 use std::io;
 use std::io::Write;
-use std::os::unix::process::CommandExt;
 use templates::*;
 
 #[derive(Parser,)]
 #[clap(about)]
 struct TmpPrj {
-	///filetype. Currently, cpp, c, lua and journal are available
-	ft:   String,
-	///project name
-	name: String,
+	/** filetype. Currently, cpp, c, lua and journal are available */
+	ft:      String,
+	/** project name */
+	name:    String,
+	/** options. currently available options
+	- -u: does not contain README.md
+	*/
+	options: String,
+	/** metadata
+	- --version: show version information
+	- --help: show help
+	*/
+	metas:   String,
 }
 
 fn create_files(fstream: Vec<FileBuf,>, prj_name: String,) -> io::Result<(),> {
@@ -65,24 +75,33 @@ fn journal(prj_name: String,) -> io::Result<(),> {
 fn main() -> io::Result<(),> {
 	let tmplt = TmpPrj::parse();
 	let prj_name = format!("./{}", &tmplt.name);
-	let ft = tmplt.ft;
-	if "journal" == &ft {
+	if "journal" == &tmplt.ft {
 		return journal(prj_name.clone(),);
 	}
 	fs::create_dir(prj_name.clone(),)?;
 
-	let fstream = if &ft == "cpp" {
-		Ok(vec![CPP, CPP_T, CPP_GI, CPP_H, CPP_MF],)
-	} else if &ft == "lua" {
-		Ok(vec![LUA, LUA_T, LUA_MF],)
-	} else if &ft == "c" {
-		Ok(vec![C, C_T, CPP_GI, C_MF],)
+	// create list for each `ft`
+	let mut fstream = if &tmplt.ft == "cpp" {
+		Ok(HashSet::from([CPP, CPP_T, CPP_GI, CPP_H, CPP_MF,],),)
+	} else if &tmplt.ft == "lua" {
+		Ok(HashSet::from([LUA, LUA_T, LUA_MF,],),)
+	} else if &tmplt.ft == "c" {
+		Ok(HashSet::from([C, C_T, CPP_GI, C_MF,],),)
 	} else {
 		Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
 	}?;
+	fstream.insert(README,);
+
+	// treat options
+	tmplt.options.chars().for_each(|c| {
+		match c {
+			'u' => fstream.remove(&README,), //'u' stands for `unimportant project`
+			_ => println!("unknown option {c}"),
+		}
+	},);
+
 	create_files(fstream, prj_name.clone(),)?;
 
-	std::process::Command::new("a",).arg(prj_name,).exec();
 	Ok((),)
 }
 
