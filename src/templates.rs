@@ -5,8 +5,6 @@ pub struct FileBuf<'a,> {
 	pub(crate) context: &'a [u8],
 }
 
-// TODO: Add README.md template
-
 pub const README: FileBuf = FileBuf {
 	name:    "README.md",
 	context: b"# about me
@@ -123,7 +121,7 @@ pub const CPP_T: FileBuf = FileBuf {
 	context: b"#include <cassert>
 #include \"all.h\"
 using namespace std;
-/// INFO: This file is `test.cpp`
+/// NOTE: This file is `test.cpp`
 
 void t1(){
     assert(true);
@@ -168,7 +166,7 @@ pub const C_T: FileBuf = FileBuf {
 	name:    "test.c",
 	context: b"#include <assert.h>
 #include <stdio.h>
-/// INFO: This file is `test.c`
+/// NOTE: This file is `test.c`
 
 void t1(){
     assert(0);
@@ -186,7 +184,8 @@ int main(){
 }",
 };
 
-pub const LUA_MF: FileBuf = FileBuf {
+/// this is currently deprecated
+const LUA_MF: FileBuf = FileBuf {
 	name:    "Makefile",
 	context: b"r : main.lua
 \tlua main.lua
@@ -199,13 +198,22 @@ t : test.lua
 
 pub const LUA_T: FileBuf = FileBuf {
 	name:    "test.lua",
-	context: b"-- INFO: This file is `test.lua`
+	context: b"-- NOTE: This file is `test.lua`
 
 print'<====: ALL TESTS HAVE PASSED :=====>'
 ",
 };
 
 pub const LUA: FileBuf = FileBuf { name: "main.lua", context: b"", };
+
+pub const SWIFT_T: FileBuf = FileBuf {
+	name:    "test.swift",
+	context: b"-- NOTE: This file is `test.swift`
+
+assert()",
+};
+
+pub const SWIFT: FileBuf = FileBuf { name: "main.sfift", context: b"", };
 
 pub const JOURNAL: &[u8] = b" # What I want to carry out during 2022?
 

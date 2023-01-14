@@ -75,18 +75,21 @@ fn journal(prj_name: String,) -> io::Result<(),> {
 fn main() -> io::Result<(),> {
 	let tmplt = TmpPrj::parse();
 	let prj_name = format!("./{}", &tmplt.name);
-	if "journal" == &tmplt.ft {
+	let ft = tmplt.ft;
+	if "journal" == ft {
 		return journal(prj_name.clone(),);
 	}
 	fs::create_dir(prj_name.clone(),)?;
 
 	// create list for each `ft`
-	let mut fstream = if &tmplt.ft == "cpp" {
+	let mut fstream = if ft == "cpp" {
 		Ok(HashSet::from([CPP, CPP_T, CPP_GI, CPP_H, CPP_MF,],),)
-	} else if &tmplt.ft == "lua" {
-		Ok(HashSet::from([LUA, LUA_T, LUA_MF,],),)
-	} else if &tmplt.ft == "c" {
+	} else if ft == "lua" {
+		Ok(HashSet::from([LUA, LUA_T,],),)
+	} else if ft == "c" {
 		Ok(HashSet::from([C, C_T, CPP_GI, C_MF,],),)
+	} else if ft == "swift" {
+		Ok(HashSet::from([SWIFT, SWIFT_T,],),)
 	} else {
 		Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
 	}?;
