@@ -1,5 +1,6 @@
 //! Contain const variables
 
+#[derive(Eq, Hash, PartialEq,)]
 pub struct FileBuf<'a,> {
 	pub(crate) name:    &'a str,
 	pub(crate) context: &'a [u8],

@@ -3,7 +3,7 @@
 mod templates;
 
 use clap::Parser;
-use mylibrary::sh_cmd;
+use mylibrary::sh;
 use std::collections::HashSet;
 use std::fs;
 use std::io;
@@ -13,24 +13,22 @@ use templates::*;
 #[derive(Parser,)]
 #[clap(about)]
 struct TmpPrj {
-	/** filetype. Currently, cpp, c, lua and journal are available */
+	/// filetype. Currently, cpp, c, lua and journal are available
 	ft:      String,
-	/** project name */
+	/// project name
 	name:    String,
-	/** options. currently available options
-	- -u: does not contain README.md
-	*/
-	options: String,
-	/** metadata
-	- --version: show version information
-	- --help: show help
-	*/
-	metas:   String,
+	/// options. currently available options
+	/// - -u: does not contain README.md
+	options: Option<String,>,
+	/// metadata
+	/// - --version: show version information
+	/// - --help: show help
+	metas:   Option<String,>,
 }
 
-fn create_files(fstream: Vec<FileBuf,>, prj_name: String,) -> io::Result<(),> {
+fn create_files(fstream: HashSet<FileBuf,>,) -> io::Result<(),> {
 	for fb in fstream {
-		let mut f = fs::File::create(format!("{prj_name}/{}", fb.name),)?;
+		let mut f = fs::File::create(fb.name,)?;
 		f.write(fb.context,)?;
 	}
 	Ok((),)
@@ -68,8 +66,7 @@ fn journal(prj_name: String,) -> io::Result<(),> {
 		Err(_,) => prj_name,
 	};
 	let name = &format!("{name}.md");
-	let fstream = vec![FileBuf { name, context: JOURNAL, }];
-	create_files(fstream, "./".to_string(),)
+	create_files(HashSet::from([FileBuf { name, context: JOURNAL, },],),)
 }
 
 fn main() -> io::Result<(),> {
@@ -96,14 +93,18 @@ fn main() -> io::Result<(),> {
 	fstream.insert(README,);
 
 	// treat options
-	tmplt.options.chars().for_each(|c| {
-		match c {
-			'u' => fstream.remove(&README,), //'u' stands for `unimportant project`
+	if let Some(opt,) = tmplt.options {
+		opt.chars().for_each(|c| match c {
+			'-' => (),
+			'u' => {
+				fstream.remove(&README,);
+			},
 			_ => println!("unknown option {c}"),
-		}
-	},);
+		},);
+	}
 
-	create_files(fstream, prj_name.clone(),)?;
+	sh::cd(prj_name,)?;
+	create_files(fstream,)?;
 
 	Ok((),)
 }
