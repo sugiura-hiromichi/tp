@@ -130,6 +130,7 @@ void t1(){
 
 int main(){
     t1();
+	 std::cout<<\"\n\t|> all test have passed.\";
 }",
 };
 
@@ -175,6 +176,7 @@ void t1(){
 
 int main(){
     t1();
+	 printf(\"\n\t|> all test have passed\");
 }",
 };
 
@@ -201,7 +203,7 @@ pub const LUA_T: FileBuf = FileBuf {
 	name:    "test.lua",
 	context: b"-- NOTE: This file is `test.lua`
 
-print'<====: ALL TESTS HAVE PASSED :=====>'
+print'\t|> all test have passed'
 ",
 };
 
@@ -211,7 +213,9 @@ pub const SWIFT_T: FileBuf = FileBuf {
 	name:    "test.swift",
 	context: b"-- NOTE: This file is `test.swift`
 
-assert()",
+assert()
+
+print(\"\n\t|> all test have passed\")",
 };
 
 pub const SWIFT: FileBuf = FileBuf { name: "main.sfift", context: b"", };
