@@ -18,7 +18,7 @@ this project is",
 //MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
 pub const CPP_MF: FileBuf = FileBuf {
 	name:    "Makefile",
-	context: b"clngp_opt= -std=c++2a -Wall -mmacosx-version-min=13 --pedantic-error
+	context: b"clngp_opt= -std=c++2a -Wall -mmacosx-version-min=13 --pedantic-errors
 
 r : a.out
 \t./a.out
@@ -106,9 +106,7 @@ pub const CPP_H: FileBuf = FileBuf {
 #include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <future>
-
-using namespace std::literals ;",
+#include <future>",
 };
 
 pub const CPP_GI: FileBuf = FileBuf {
@@ -130,7 +128,7 @@ void t1(){
 
 int main(){
     t1();
-	 std::cout<<\"\n\t|> all test have passed.\";
+	 std::cout<<\"|> all test have passed.\";
 }",
 };
 
