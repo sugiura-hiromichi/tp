@@ -176,7 +176,7 @@ void t1(){
 
 int main(){
     t1();
-	 printf(\"\n\t|> all test have passed\");
+	 printf(\"|> all test have passed\");
 }",
 };
 
@@ -203,7 +203,7 @@ pub const LUA_T: FileBuf = FileBuf {
 	name:    "test.lua",
 	context: b"-- NOTE: This file is `test.lua`
 
-print'\t|> all test have passed'
+print'|> all test have passed'
 ",
 };
 
@@ -215,10 +215,10 @@ pub const SWIFT_T: FileBuf = FileBuf {
 
 assert()
 
-print(\"\n\t|> all test have passed\")",
+print(\"|> all test have passed\")",
 };
 
-pub const SWIFT: FileBuf = FileBuf { name: "main.sfift", context: b"", };
+pub const SWIFT: FileBuf = FileBuf { name: "main.swift", context: b"", };
 
 pub const JOURNAL: &[u8] = b" # What I want to carry out during 2022?
 
