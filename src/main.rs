@@ -4,6 +4,7 @@ mod templates;
 
 use clap::Parser;
 use mylibrary::sh;
+use mylibrary::sh_cmd;
 use std::collections::HashSet;
 use std::fs;
 use std::io;
@@ -103,7 +104,7 @@ fn main() -> io::Result<(),> {
 		},);
 	}
 
-	sh::cd(prj_name,)?;
+	sh_cmd!("cd", [prj_name]);
 	create_files(fstream,)?;
 
 	Ok((),)
