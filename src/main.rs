@@ -86,14 +86,17 @@ fn main() -> anyhow::Result<(),> {
 
 	match &ft[..] {
 		"rs" => {
-			let mut args = "new".to_string();
+			let mut args = "new ".to_string() + &prj_name;
 			if let Some(opt,) = tmplt.options {
 				let mut val = opt.split('=',);
 				val.next();
 				args = args + " " + val.next().unwrap();
 			}
+			println!("reached here--------");
 			sh_cmd!("cargo", args.split_whitespace())?;
+			println!("reached here--------");
 			sh_cmd!("cd", [prj_name])?;
+			println!("reached here--------");
 			append_to_file(HashSet::from([RS_GI, RS_TOML,],),)
 		},
 		"journal" => journal(prj_name.clone(),),
