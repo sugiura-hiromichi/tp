@@ -1,9 +1,9 @@
-#![allow(unused)]
+// TODO: stop clap
+#![feature(if_let_guard)]
 
 mod templates;
 
 use clap::Parser;
-use mylibrary::sh;
 use mylibrary::sh_cmd;
 use std::collections::HashSet;
 use std::fs;
@@ -14,12 +14,12 @@ use templates::*;
 #[derive(Parser,)]
 #[clap(about)]
 struct TmpPrj {
-	/// filetype. Currently, cpp, c, lua and journal are available
+	/// filetype. Currently, rust, cpp, c, lua and journal are available
 	ft:      String,
 	/// project name
 	name:    String,
-	/// options. currently available options
-	/// - -u: does not contain README.md
+	/// # available options:
+	/// - `-pass=<value>` passing options to wrapped system
 	options: Option<String,>,
 	/// metadata
 	/// - --version: show version information
@@ -27,7 +27,7 @@ struct TmpPrj {
 	metas:   Option<String,>,
 }
 
-fn create_files(fstream: HashSet<FileBuf,>,) -> io::Result<(),> {
+fn create_files(fstream: HashSet<FileBuf,>,) -> anyhow::Result<(),> {
 	for fb in fstream {
 		let mut f = fs::File::create(fb.name,)?;
 		f.write(fb.context,)?;
@@ -35,7 +35,16 @@ fn create_files(fstream: HashSet<FileBuf,>,) -> io::Result<(),> {
 	Ok((),)
 }
 
-fn journal(prj_name: String,) -> io::Result<(),> {
+fn append_to_file(fstream: HashSet<FileBuf,>,) -> anyhow::Result<(),> {
+	for fb in fstream {
+		let mut f = fs::read_to_string(fb.name,)?;
+		f.push_str(std::str::from_utf8(fb.context,)?,);
+		fs::write(fb.name, f,)?;
+	}
+	Ok((),)
+}
+
+fn journal(prj_name: String,) -> anyhow::Result<(),> {
 	//remove first "./" of prj_name
 	let name = match &prj_name[2..].parse::<i32>() {
 		Ok(m_y,) => match m_y {
@@ -70,52 +79,42 @@ fn journal(prj_name: String,) -> io::Result<(),> {
 	create_files(HashSet::from([FileBuf { name, context: JOURNAL, },],),)
 }
 
-fn main() -> io::Result<(),> {
+fn main() -> anyhow::Result<(),> {
 	let tmplt = TmpPrj::parse();
 	let prj_name = format!("./{}", &tmplt.name);
 	let ft = tmplt.ft;
-	if "journal" == ft {
-		return journal(prj_name.clone(),);
-	}
-	fs::create_dir(prj_name.clone(),)?;
 
-	// create list for each `ft`
-	let mut fstream = if ft == "cpp" {
-		Ok(HashSet::from([CPP, CPP_T, CPP_GI, CPP_H, CPP_MF,],),)
-	} else if ft == "lua" {
-		Ok(HashSet::from([LUA, LUA_T,],),)
-	} else if ft == "c" {
-		Ok(HashSet::from([C, C_T, CPP_GI, C_MF,],),)
-	} else if ft == "swift" {
-		Ok(HashSet::from([SWIFT, SWIFT_T,],),)
-	} else {
-		Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
-	}?;
-	fstream.insert(README,);
+	match &ft[..] {
+		"rs" => {
+			let mut args = "new".to_string();
+			if let Some(opt,) = tmplt.options {
+				let mut val = opt.split('=',);
+				val.next();
+				args = args + " " + val.next().unwrap();
+			}
+			sh_cmd!("cargo", args.split_whitespace())?;
+			append_to_file(HashSet::from([RS_GI, RS_TOML,],),)
+		},
+		"journal" => journal(prj_name.clone(),),
+		_ => {
+			fs::create_dir(prj_name.clone(),)?;
 
-	// treat options
-	if let Some(opt,) = tmplt.options {
-		opt.chars().for_each(|c| match c {
-			'-' => (),
-			'u' => {
-				fstream.remove(&README,);
-			},
-			_ => println!("unknown option {c}"),
-		},);
-	}
+			// create list for each `ft`
+			let mut fstream = if ft == "cpp" {
+				Ok(HashSet::from([CPP, CPP_T, CPP_GI, CPP_H, CPP_MF,],),)
+			} else if ft == "lua" {
+				Ok(HashSet::from([LUA, LUA_T,],),)
+			} else if ft == "c" {
+				Ok(HashSet::from([C, C_T, CPP_GI, C_MF,],),)
+			} else if ft == "swift" {
+				Ok(HashSet::from([SWIFT, SWIFT_T,],),)
+			} else {
+				Err(io::Error::new(io::ErrorKind::NotFound, "unknown filetype",),)
+			}?;
+			fstream.insert(README,);
 
-	sh_cmd!("cd", [prj_name]);
-	create_files(fstream,)?;
-
-	Ok((),)
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn parse_str_to_num() {
-		assert_eq!("1".to_string().parse::<i32>(), Ok(1));
+			sh_cmd!("cd", [prj_name])?;
+			create_files(fstream,)
+		},
 	}
 }

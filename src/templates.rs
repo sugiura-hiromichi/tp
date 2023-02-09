@@ -10,9 +10,21 @@ pub const README: FileBuf = FileBuf {
 	name:    "README.md",
 	context: b"# about me
 
->note that this doc is generated automatically
+>note that this doc is auto generated
 
 this project is",
+};
+
+pub const RS_GI: FileBuf = FileBuf {
+	name:    ".gitignore",
+	context: b"/target
+Cargo.lock",
+};
+
+pub const RS_TOML: FileBuf = FileBuf {
+	name:    "Cargo.toml",
+	context: b"mylibrary={git=\"ssh://git@github.com/sugiura-hiromichi/mylibrary\"
+anyhow=\"1.0\"}",
 };
 
 //MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
@@ -183,18 +195,6 @@ pub const C: FileBuf = FileBuf {
 	context: b"#include <stdio.h>
 int main(){
 }",
-};
-
-/// this is currently deprecated
-const LUA_MF: FileBuf = FileBuf {
-	name:    "Makefile",
-	context: b"r : main.lua
-\tlua main.lua
-
-t : test.lua
-\tlua test.lua
-
-.PHONY : r t",
 };
 
 pub const LUA_T: FileBuf = FileBuf {
