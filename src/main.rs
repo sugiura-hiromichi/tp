@@ -40,6 +40,8 @@ fn append_to_file(fstream: HashSet<FileBuf,>,) -> anyhow::Result<(),> {
 		if let Ok(mut f,) = fs::read_to_string(fb.name,) {
 			f.push_str(std::str::from_utf8(fb.context,)?,);
 			fs::write(fb.name, f,)?;
+		} else {
+			create_files(HashSet::from([fb,],),)?;
 		}
 	}
 	Ok((),)
