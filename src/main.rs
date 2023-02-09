@@ -93,6 +93,7 @@ fn main() -> anyhow::Result<(),> {
 				args = args + " " + val.next().unwrap();
 			}
 			sh_cmd!("cargo", args.split_whitespace())?;
+			sh_cmd!("cd", [prj_name])?;
 			append_to_file(HashSet::from([RS_GI, RS_TOML,],),)
 		},
 		"journal" => journal(prj_name.clone(),),
