@@ -37,9 +37,10 @@ fn create_files(fstream: HashSet<FileBuf,>,) -> anyhow::Result<(),> {
 
 fn append_to_file(fstream: HashSet<FileBuf,>,) -> anyhow::Result<(),> {
 	for fb in fstream {
-		let mut f = fs::read_to_string(fb.name,)?;
-		f.push_str(std::str::from_utf8(fb.context,)?,);
-		fs::write(fb.name, f,)?;
+		if let Ok(mut f,) = fs::read_to_string(fb.name,) {
+			f.push_str(std::str::from_utf8(fb.context,)?,);
+			fs::write(fb.name, f,)?;
+		}
 	}
 	Ok((),)
 }
@@ -92,11 +93,8 @@ fn main() -> anyhow::Result<(),> {
 				val.next();
 				args = args + " " + val.next().unwrap();
 			}
-			println!("reached here--------");
 			sh_cmd!("cargo", args.split_whitespace())?;
-			println!("reached here--------");
 			sh_cmd!("cd", [prj_name])?;
-			println!("reached here--------");
 			append_to_file(HashSet::from([RS_GI, RS_TOML,],),)
 		},
 		"journal" => journal(prj_name.clone(),),
