@@ -1,11 +1,17 @@
 [package]
-name = "tp"
+name = "sugiura-hiromichi_tp"
 version = "0.2.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "my personal template generator"
+homepage = "https://github.com/sugiura-hiromichi/tp"
+documentation = "https://github.com/sugiura-hiromichi/tp"
+repository = "https://github.com/sugiura-hiromichi/tp"
+readme = "README.md"
 
 [dependencies]
 anyhow = "1.0"
 clap = { version = "3.2.11", features = ["derive"] }
-mylibrary = { git = "https://github.com/sugiura-hiromichi/mylibrary" }
+sugiura-hiromichi_mylibrary = "1"

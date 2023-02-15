@@ -4,11 +4,11 @@
 mod templates;
 
 use clap::Parser;
-use mylibrary::sh_cmd;
 use std::collections::HashSet;
 use std::fs;
 use std::io;
 use std::io::Write;
+use sugiura_hiromichi_mylibrary::sh_cmd;
 use templates::*;
 
 #[derive(Parser,)]
