@@ -1,4 +1,3 @@
-// TODO: stop clap
 #![feature(if_let_guard)]
 
 mod templates;
@@ -88,17 +87,6 @@ fn main() -> anyhow::Result<(),> {
 	let ft = tmplt.ft;
 
 	match &ft[..] {
-		"rs" => {
-			let mut args = "new ".to_string() + &prj_name;
-			if let Some(opt,) = tmplt.options {
-				let mut val = opt.split('=',);
-				val.next();
-				args = args + " " + val.next().unwrap();
-			}
-			sh_cmd!("cargo", args.split_whitespace())?;
-			sh_cmd!("cd", [prj_name])?;
-			append_to_file(HashSet::from([RS_GI, RS_TOML,],),)
-		},
 		"journal" => journal(prj_name.clone(),),
 		_ => {
 			fs::create_dir(prj_name.clone(),)?;

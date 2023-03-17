@@ -15,17 +15,17 @@ pub const README: FileBuf = FileBuf {
 this project is",
 };
 
-pub const RS_GI: FileBuf = FileBuf {
-	name:    ".gitignore",
-	context: b"/target
-Cargo.lock",
-};
-
-pub const RS_TOML: FileBuf = FileBuf {
-	name:    "Cargo.toml",
-	context: b"mylibrary={git=\"ssh://git@github.com/sugiura-hiromichi/mylibrary\"
-anyhow=\"1.0\"}",
-};
+//pub const RS_GI: FileBuf = FileBuf {
+//	name:    ".gitignore",
+//	context: b"/target
+//Cargo.lock",
+//};
+//
+//pub const RS_TOML: FileBuf = FileBuf {
+//	name:    "Cargo.toml",
+//	context: b"mylibrary={git=\"ssh://git@github.com/sugiura-hiromichi/mylibrary\"
+//anyhow=\"1.0\"}",
+//};
 
 //MF->Makefile, GI->.gitignore 'LauguageName'->Default Code
 pub const CPP_MF: FileBuf = FileBuf {
