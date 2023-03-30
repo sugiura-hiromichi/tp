@@ -1,15 +1,15 @@
 [package]
-name = "sugiura-hiromichi_tp"
-version = "0.2.0"
+name = "tp_"
+version = "0.3.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-license = "MIT"
-description = "my personal template generator"
-homepage = "https://github.com/sugiura-hiromichi/tp"
 documentation = "https://github.com/sugiura-hiromichi/tp"
-repository = "https://github.com/sugiura-hiromichi/tp"
+homepage = "https://github.com/sugiura-hiromichi/tp"
+license = "MIT"
 readme = "README.md"
+repository = "https://github.com/sugiura-hiromichi/tp"
+description = "my personal template generator"
 
 [dependencies]
 anyhow = "1.0"
